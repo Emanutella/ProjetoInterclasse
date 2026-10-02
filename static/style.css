@@ -247,6 +247,11 @@ tbody tr:hover {
     gap: 16px;
 }
 
+.responsavel {
+    display: flex;
+    gap: 8px;
+}
+
 label {
     display: block;
     margin-bottom: 6px;
