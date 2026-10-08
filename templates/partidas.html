@@ -24,7 +24,7 @@
                 <div class="campo">
                     <label for="time_casa_id">Time da Casa *</label>
                     <select id="time_casa_id" name="time_casa_id" required>
-                        {% for time in times %}
+                        {% for time, jogadores in times %}
                         <option value="{{time.id}}">{{time.nome}}</option>
                         {% endfor %}
                     </select>
@@ -32,7 +32,7 @@
                 <div class="campo">
                     <label for="time_visitante_id">Time Visitante *</label>
                     <select id="time_visitante_id" name="time_visitante_id" required>
-                        {% for time in times %}
+                        {% for time, jogadores in times %}
                         <option value="{{time.id}}">{{time.nome}}</option>
                         {% endfor %}
                     </select>
@@ -70,19 +70,19 @@
                 <tr>
                     <th>Id</th>
                     <th>Time da Casa</th>
-                    <th>Time visitante</th>
                     <th>Gols do time da casa</th>
+                    <th>Time visitante</th>
                     <th>Gols do time visitante</th>
                     <th>Data da partida</th>
                 </tr>
             </thead>
             <tbody>
-            {% for partida in partidas %}
+            {% for partida, time_casa, time_visitante in partidas %}
                 <tr>
                     <td> {{partida.id}} </td>
-                    <td> {{partida.time_casa_id}} </td>
-                    <td> {{partida.time_visitante_id}} </td>
+                    <td> {{time_casa.nome}} </td>
                     <td> {{partida.gols_casa}} </td>
+                    <td> {{time_visitante.nome}} </td>
                     <td> {{partida.gols_visitante}} </td>
                     <td> {{partida.data_partida}}</td>
                 </tr>

@@ -1,14 +1,23 @@
-from sqlalchemy import select
+from sqlalchemy import select,func
 from sqlalchemy.exc import SQLAlchemyError
 from flask import flash
-from database import Time, db_session
-
+from database import Time, db_session, Jogador
 
 
 def select_todos_times():
-    times_sql = select(Time)
-    times = db_session.execute(times_sql).scalars().all()
+    times_sql = (
+        select(Time, func.count(Jogador.id).label("jogadores"))
+        .outerjoin(Jogador, Jogador.time_id == Time.id)
+        .group_by(Time.id)
+    )
+    times = db_session.execute(times_sql).all()
     return times
+
+def select_quantidade_total():
+    times_sql = select(func.count(Time.id))
+    quantidade_total = db_session.execute(times_sql).scalar()
+    return quantidade_total
+print(select_quantidade_total())
 
 def salvar(nome, turma, responsavel):
     try:

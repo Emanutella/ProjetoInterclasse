@@ -11,32 +11,25 @@ app.secret_key = "chave-secreta-interclasse-2026"
 
 @app.route("/")
 def dashboard():
-    times_sql = select(Time)
-    times = db_session.execute(times_sql).scalars().all()
+    times = tabela_time.select_quantidade_total()
+    jogadores = tabela_jogador.select_quantidade_total()
+    partidas = tabela_partida.select_quantidade_total()
 
-    jogadores_sql = select(Jogador)
-    jogadores = db_session.execute(jogadores_sql).scalars().all()
-
-    partidas_sql = select(Partida)
-    partidas = db_session.execute(partidas_sql).scalars().all()
     return render_template(
         "dashboard.html",
-        total_jogadores=len(jogadores),
-        total_times=len(times),
-        total_partidas=len(partidas),
+        total_jogadores= jogadores,
+        total_times= times,
+        total_partidas= partidas
 
     )
 
 
 @app.route("/jogadores")
 def listar_jogadores():
-    times_sql = select(Time)
-    times = db_session.execute(times_sql).scalars().all()
 
-    jogadores_sql = select(Jogador)
-    jogadores = db_session.execute(jogadores_sql).scalars().all()
+    jogadores = tabela_jogador.select_todos_jogadores()
 
-    return render_template("jogadores.html", jogadores=jogadores, times=times)
+    return render_template("jogadores.html", jogadores=jogadores)
 
 
 @app.route("/jogadores/novo", methods=["GET", "POST"])
@@ -70,11 +63,7 @@ def novo_jogador():
 
 @app.route("/times")
 def listar_times():
-    # Buscar todos os times no banco
-    # 1-Montar o select
-    times_sql = select(Time)
-    # 2-Executar o select
-    times = db_session.execute(times_sql).scalars().all()
+    times = tabela_time.select_todos_times()
     return render_template("times.html", times=times)
 
 @app.route("/times/novo", methods=["GET", "POST"])
@@ -140,7 +129,7 @@ def nova_partida():
             return redirect(url_for("nova_partida"))
         if time_visitante_id == time_casa_id:
             flash("Selecione outro time!", "error")
-            return redirect(url_for("nova_partida"))
+            return render_template("partida.html")
 
         # 3-Salvar no banco
         tabela_partida.salvar(time_casa_id=time_casa_id, time_visitante_id=time_visitante_id, gols_casa=gols_casa, gols_visitante=gols_visitante, data_partida=data_partida)

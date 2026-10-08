@@ -39,7 +39,7 @@
             <div class="campo">
                 <label for="time_id">Time</label>
                 <select id="time_id" name="time_id">
-                    {% for time in times %}
+                    {% for time, jogadores in times %}
                     <option value="{{time.id}}">{{time.nome}}</option>
                     {% endfor %}
                 </select>
@@ -66,13 +66,13 @@
                 </tr>
             </thead>
             <tbody>
-            {% for jogador in jogadores %}
+            {% for jogador, time in jogadores %}
                 <tr>
                     <td> {{jogador.id}} </td>
                     <td> {{jogador.nome.capitalize()}} </td>
                     <td> {{jogador.numero_camisa}} </td>
                     <td> {{jogador.posicao.capitalize()}} </td>
-                    <td> {{jogador.time_id}} </td>
+                    <td> {{time.nome}} </td>
                 </tr>
             {% endfor %}
             </tbody>
