@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block titulo %}{{ time.nome }}{% endblock %}
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <a href="{{ url_for('listar_times') }}" class="voltar">
+            &larr; Voltar para Times
+        </a>
+        <h1>{{ time.nome }}</h1>
+        <p class="subtitulo">Turma: {{ time.turma or '-' }}</p>
+        <p class="subtitulo">Responsável: {{ time.responsavel or '-' }}</p>
+    </div>
+    <a href="{{ url_for('detalhes_time', id_time=time.id) }}"
+       class="botao botao-secundario">Editar Time</a>
+</div>
+<!-- Resumo de desempenho -->
+<div class="cartoes cartoes-compactos">
+    <div class="cartao">
+        <div class="cartao-valor">0</div>
+        <div class="cartao-label">Partidas</div>
+    </div>
+    <div class="cartao">
+        <div class="cartao-valor">0</div>
+        <div class="cartao-label">Vitórias</div>
+    </div>
+    <div class="cartao">
+        <div class="cartao-valor">0</div>
+        <div class="cartao-label">Empates</div>
+    </div>
+    <div class="cartao">
+        <div class="cartao-valor">0</div>
+        <div class="cartao-label">Derrotas</div>
+    </div>
+</div>
+<!-- Jogadores do time -->
+<section class="painel">
+    <h2>Jogadores ({{qtd_jogadores}})</h2>
+    {% if jogadores %}
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Número da Camisa</th>
+                <th>Posição</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for jogador in jogadores %}
+            <tr>
+                <td> {{jogador.id}} </td>
+                <td> {{jogador.nome.capitalize()}} </td>
+                <td> {{jogador.numero_camisa}} </td>
+                <td> {{jogador.posicao.capitalize()}} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="vazio">Este time ainda não possui jogadores.</p>
+    {% endif %}
+</section>
+<!-- Partidas disputadas -->
+<section class="painel">
+    <h2>Partidas disputadas ({{ qtd_partidas }})</h2>
+    {% if partidas %}
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Time da Casa</th>
+            <th>Gols do time da casa</th>
+            <th>Time visitante</th>
+            <th>Gols do time visitante</th>
+            <th>Data da partida</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for partida, time_casa, time_visitante in partidas %}
+        <tr>
+            <td> {{partida.id}} </td>
+            <td> {{time_casa.nome}} </td>
+            <td> {{partida.gols_casa}} </td>
+            <td> {{time_visitante.nome}} </td>
+            <td> {{partida.gols_visitante}} </td>
+            <td> {{partida.data_partida}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% else %}
+    <p class="vazio">Este time ainda não disputou partidas.</p>
+    {% endif %}
+</section>
+{% endblock %}

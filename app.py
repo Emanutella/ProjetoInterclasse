@@ -74,6 +74,7 @@ def novo_time():
         nome = request.form.get("nome", "").strip()
         responsavel = request.form.get("responsavel","").strip()
         turma = request.form.get("turma","").strip()
+        jogadores_ids = request.form.getlist("jogadores")
         #2-Verificar se foi digitado
         if not nome:
             flash("Preencha este campo!", "error")
@@ -85,21 +86,38 @@ def novo_time():
             flash("Preencha este campo!", "error")
             return redirect(url_for("novo_time"))
         #3-Salvar no banco
-        tabela_time.salvar(nome=nome, responsavel=responsavel, turma=turma)
+        time = tabela_time.salvar(nome=nome, turma=turma, responsavel=responsavel)
+
+        if jogadores_ids:
+            for jogador_id in jogadores_ids:
+                jogador = tabela_jogador.select_um(jogador_id)
+                jogador.time_id = time.id
+                db_session.add(jogador)
+                db_session.commit()
 
     times = tabela_time.select_todos_times()
-    return render_template("times.html", times=times)
+    jogadores = tabela_jogador.select_todos_jogadores()
+    return render_template("times.html", times=times, jogadores=jogadores)
 
+
+@app.route("/times/<id_time>", methods=["GET", "POST"])
+def detalhes_time(id_time):
+    time = tabela_time.select_um(int(id_time))
+    jogadores= tabela_jogador.select_jogadores_por_time(int(id_time)) # Fazer uma função que traga todos os jogadores do time
+    partidas= tabela_partida.select_partidas_por_time(int(id_time))
+    return render_template(
+        "time_detalhes.html",
+        time=time,
+        jogadores=jogadores,
+        partidas=partidas,
+        qtd_jogadores=len(jogadores),
+        qtd_partidas=len(partidas))
 
 
 @app.route("/partidas")
 def listar_partidas():
-    times_sql = select(Time)
-    times = db_session.execute(times_sql).scalars().all()
-
-    partidas_sql = select(Partida)
-    partidas = db_session.execute(partidas_sql).scalars().all()
-    return render_template("partidas.html", partidas=partidas, times=times)
+    partidas = tabela_partida.select_todas_partidas()
+    return render_template("partidas.html", partidas=partidas)
 
 
 @app.route("/partidas/nova", methods=["GET", "POST"])

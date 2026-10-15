@@ -240,6 +240,8 @@ tbody tr:hover {
 .campo {
     margin-bottom: 16px;
     flex: 1;
+    max-height: 200px;
+    overflow: auto
 }
 
 .linha-campos {
