@@ -59,7 +59,37 @@ def novo_jogador():
     times = tabela_time.select_todos_times()
     return render_template("jogadores.html", jogadores=jogadores, times=times)
 
+@app.route("/jogadores/<id_jogador>", methods=["GET", "POST"])
+def editar_jogador(id_jogador):
+    # Buscar o jogador no banco
+    jogador = tabela_jogador.select_um(id_jogador)
+    # Salvar as alterações
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        numero_camisa = request.form.get("numero_camisa") or None
+        posicao = request.form.get("posicao", "").strip()
+        time_id = request.form.get("time_id") or None
+        if not nome:
+            flash("Preencha este campo!", "error")
+        if not numero_camisa:
+            flash("Preencha este campo!", "error")
+        if not posicao:
+            flash("Preencha este campo!", "error")
+        if not time_id:
+            flash("Preencha este campo!", "error")
+        else:
+            jogador.nome = nome
+            jogador.numero_camisa = numero_camisa
+            jogador.posicao = posicao
+            jogador.time_id = int(time_id)
+            db_session.commit()
 
+            flash("Jogador editado com sucesso!", "success")
+        return redirect(url_for("listar_jogadores"))
+    # Carregar as informações
+    jogadores = tabela_jogador.select_todos_jogadores()
+    times = tabela_time.select_todos_times()
+    return render_template("jogadores.html", jogadores=jogadores, editar=jogador, times=times)
 
 @app.route("/times")
 def listar_times():
