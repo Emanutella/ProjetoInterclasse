@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block titulo %}Movimentações{% endblock %}
+
+{% block conteudo %}
+    <div class="cabecalho-pagina">
+        <div>
+            <h1>Movimentações</h1>
+            <p class="subtitulo">Histórico de transferências de jogadores entre times</p>
+        </div>
+        <a href="{{ url_for('nova_movimentacao') }}" class="botao">+ Nova Movimentação</a>
+    </div>
+
+    {% if request.endpoint == 'nova_movimentacao' %}
+    <section class="painel formulario">
+        <h2>Nova Movimentação</h2>
+
+        <form method="POST" action="{{ url_for('nova_movimentacao') }}">
+            <div class="linha-campos">
+                <div class="campo">
+                    <label for="jogador_id">Jogador *</label>
+                    <select id="jogador_id" name="jogador_id" required>
+                        <option value="">Selecione um jogador</option>
+                        {% for jogador, time in jogadores %}
+                            <option value="{{ jogador.id }}"
+
+                                {% if jogador_selecionado_id and jogador_selecionado_id == jogador.id %}selected{% endif %}>
+                                {{ jogador.nome }} (Atual: {{ time.nome if time else 'Sem time' }}
+                                - {{jogador.posicao}})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="time_destino_id">Time Destino *</label>
+                    <select id="time_destino_id" name="time_destino_id" required>
+                        <option value="">Selecione o time de destino</option>
+                        {% for time, qtd in times %}
+                            <option value="{{ time.id }}">{{ time.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="acoes-form">
+                <button type="submit" class="botao">Transferir</button>
+                <a href="{{ url_for('nova_movimentacao') }}" class="botao botao-secundario">Cancelar</a>
+            </div>
+        </form>
+    </section>
+    {% endif %}
+
+    <section class="painel">
+        <h2>Histórico de Movimentações</h2>
+        {% if movimentacoes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Jogador</th>
+                    <th>Time Origem</th>
+                    <th>Time Destino</th>
+                    <th>Data/Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for movimentacao, jogador, time_origem, time_destino in movimentacoes %}
+                <tr>
+                    <td>{{ movimentacao.id }}</td>
+                    <td>{{ jogador.nome }}</td>
+                    <td>{{ time_origem.nome if time_origem else '-' }}</td>
+                    <td>{{ time_destino.nome if time_destino else '-' }}</td>
+                    <td>{{ movimentacao.data_movimentacao.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="vazio">Nenhuma movimentação registrada ainda.</p>
+        {% endif %}
+    </section>
+{% endblock %}

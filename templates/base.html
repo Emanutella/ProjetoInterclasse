@@ -38,6 +38,13 @@
                        <span class="icone">⚽</span> Partidas
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('nova_movimentacao') }}"
+                       class="{{ 'ativo' if 'movimentacao' in request.endpoint else '' }}">
+                       <span class="icone">🔁</span> Movimentações
+                    </a>
+                </li>
+                </li>
             </ul>
         </nav>
 
