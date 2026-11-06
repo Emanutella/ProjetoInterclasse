@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Registro' if registro else 'Login' }}{% endblock %}
+
+{% block conteudo %}
+<div style="max-width: 450px; margin: 40px auto;">
+    <section class="painel formulario">
+        {% if registro %}
+            <h2>Criar Conta</h2>
+            <form method="POST" action="{{ url_for('registro') }}">
+                <div class="campo">
+                    <label for="nome">Nome *</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="campo">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="campo">
+                    <label for="senha">Palavra-passe *</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <div class="acoes-form">
+                    <button type="submit" class="botao">Registrar</button>
+                    <a href="{{ url_for('login') }}" class="botao botao-secundario">Já tenho conta</a>
+                </div>
+            </form>
+        {% else %}
+            <h2>Login</h2>
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="campo">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="campo">
+                    <label for="senha">Palavra-passe *</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <div class="acoes-form">
+                    <button type="submit" class="botao">Entrar</button>
+                    <a href="{{ url_for('login', registro=True) }}" class="botao botao-secundario">Criar Conta</a>
+                </div>
+            </form>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

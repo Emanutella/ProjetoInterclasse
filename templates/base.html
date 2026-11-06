@@ -9,7 +9,7 @@
 <body>
 
     <div class="layout">
-
+        {% if current_user.id %}
         <!-- MENU VERTICAL -->
         <nav class="menu-lateral">
             <div class="menu-titulo">🏆 Interclasse</div>
@@ -47,6 +47,7 @@
                 </li>
             </ul>
         </nav>
+    {% endif %}
 
         <!-- CONTEÚDO -->
         <main class="conteudo">

@@ -7,7 +7,9 @@
             <h1>Movimentações</h1>
             <p class="subtitulo">Histórico de transferências de jogadores entre times</p>
         </div>
+        {% if not editar %}
         <a href="{{ url_for('nova_movimentacao') }}" class="botao">+ Nova Movimentação</a>
+        {% endif %}
     </div>
 
     {% if request.endpoint == 'nova_movimentacao' %}
