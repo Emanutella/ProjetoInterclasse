@@ -44,6 +44,11 @@
                        <span class="icone">🔁</span> Movimentações
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('logout') }}">
+                       <span class="icone">➡️</span> Sair [{{current_user.nome}}]
+                    </a>
+                </li>
                 </li>
             </ul>
         </nav>

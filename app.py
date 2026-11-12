@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, g
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.testing.pickleable import User
+from sqlalchemy.util import non_memoized_property
 
 from banco import tabela_time, tabela_jogador, tabela_partida, tabela_movimentacao
 from database import *
@@ -53,16 +54,23 @@ def login():
         "login.html",
         registro= request.args.get("registro") == 'True'
     )
+
+@app.route('/logout')
+@login_required
+def logout():
+    return redirect(url_for('login'))
+
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == "POST":
         nome = request.form.get("nome")
         email = request.form.get("email")
-        senha = request.form.get("seha")
+        senha = request.form.get("senha")
 
         if not nome and not email and not senha:
             flash('Preencher todos os campos', 'error')
             return redirect(url_for('registro'))
+
         usuario_sql = select(Usuario).where(Usuario.email == email)
         usuario_email = db_session.execute(usuario_sql).scalar_one_or_none()
 
